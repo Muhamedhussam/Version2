@@ -37,6 +37,22 @@ if (isset($_GET['username'])) {
                         //echo 'Already following!';
                         $isFollowing = True;
                 }
+                if  (isset($_POST['post'])){
+                  $postbody  = $_post['postbody'];
+                  $userid= Login::isLoggedIn();
+                  if(strlen($postbody)> 160 ||  strlen($postbody)  < 1)[
+
+                    die('Incorrect lenght!');
+                  ]
+                  htmlspecialchars
+                DB::query('INSERT INTO posts VALUES(\'\',  :postbody , NOW(), :userid, 0)', array (':postbody'=>$postbody,':userid'=>$userid));
+
+                }
+                $dbposts = DB::query('SELECT * FROM  posts WHERE user_id=:userid  ORDER BY id DESC', array(':userid'=>$userid));
+                $post = "";
+                foreach ($dbposts as $p) {
+                $posts  .=  $p['body']."<hr /></br />"; 
+                }
 
         } else {
                 die('User not found!');
@@ -56,3 +72,10 @@ if (isset($_GET['username'])) {
         }
         ?>
 </form>
+<form action="profile.php?username=<?php echo $username; ?>" method="post">
+<textarea name="postbody" rows="8" cols="80"></textarea>
+<input type="submit"  name="post" value="Post">
+</form>
+<div  class="posts">
+  <?php echo $posts; ?>
+</div>
